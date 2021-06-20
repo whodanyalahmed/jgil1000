@@ -69,11 +69,17 @@ def retrieve_permissions(file_id):
   except Exception as error:
     print('An error occurred: %s' % error)
   return None
-file_id = CheckFileDir('agency')
+emails = []
+filename = input("Enter filename(case sensitive) to assign email in drive: ")
+no_of_emails = int(input("Enter no of emails you wanna add: "))
+for no in range(no_of_emails):
+    email = input("Enter email to share the file: ")
+    emails.append(email)
+file_id = CheckFileDir(filename)
 perm_id = retrieve_permissions(file_id)
 print(perm_id)
 # Insert new permission first
-emails = ['daninotific@gmail.com','ayizashiekh@gmail.com','whodanyalahmed@gmail.com']
+# emails = ['daninotific@gmail.com','ayizashiekh@gmail.com','whodanyalahmed@gmail.com']
 
 # Then delete old permission
 for id in perm_id:

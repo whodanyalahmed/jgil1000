@@ -33,9 +33,10 @@ if not creds or not creds.valid:
     with open('token.json', 'w') as token:
         token.write(creds.to_json())
 
+filename = input("Enter filename(case sensitive) to create: ")
 service = build('drive', 'v3', credentials=creds)
 data = {
-    'name': 'sheet1',
+    'name': filename,
     'mimeType': 'application/vnd.google-apps.spreadsheet',
 }
 file = service.files().create(body=data).execute() 

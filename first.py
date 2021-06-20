@@ -35,17 +35,7 @@ if not creds or not creds.valid:
 
 service = build('drive', 'v3', credentials=creds)
 
-# Call the Drive v3 API
-# results = service.files().list(
-#     pageSize=10, fields="nextPageToken, files(id, name)").execute()
-# items = results.get('files', [])
 
-# if not items:
-#     print('No files found.')
-# else:
-#     print('Files:')
-#     for item in items:
-#         print(u'{0} ({1})'.format(item['name'], item['id']))
 
 def CheckFileDir(FileName):
     # page_token = None
@@ -82,4 +72,5 @@ def DownloadFile(filename):
     except Exception as e:
         print('Error downloading file from Google Drive: %s' % e)
 
-DownloadFile('agency')
+filename = input("Enter filename(case sensitive) to download: ")
+DownloadFile(filename)

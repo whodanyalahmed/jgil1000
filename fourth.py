@@ -72,7 +72,7 @@ def UploadFile(path,local_filename,upload_name):
     'name': upload_name,
     'mimeType': 'application/vnd.google-apps.spreadsheet'
     }
-    media = MediaFileUpload(path+filename,
+    media = MediaFileUpload(path+local_filename,
                         mimetype='application/vnd. openxmlformats-officedocument',
                         resumable=True)
     file = service.files().create(body=file_metadata,
@@ -82,6 +82,8 @@ def UploadFile(path,local_filename,upload_name):
     
 
 path = 'I:\\clients\\jgil1000\\'
-filename = "agency.xlsx"
-drive_filename = "agency"
+filename = input("Enter local filename(case sensitive) with extension to upload in drive: ")
+# drive_filename = "agency"
+
+drive_filename = input("Enter filename(case sensitive) to show in drive: ")
 UploadFile(path,filename,drive_filename)

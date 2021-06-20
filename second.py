@@ -63,4 +63,5 @@ def delete_file(filename):
     except Exception as e:
         print('An error occurred: %s',e)
 
-delete_file('sheet1')
+filename = input("Enter filename(case sensitive) to delete file from drive: ")
+delete_file(filename)
