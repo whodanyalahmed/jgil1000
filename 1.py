@@ -30,7 +30,7 @@ service = build('drive', 'v3', credentials=creds)
 
 
 def CheckFileDir(FileName):
-    results = service.files().list(q="mimeType = 'application/vnd.google-apps.spreadsheet'",spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
+    results = service.files().list(q="mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false",spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
     items = results.get('files', [])
 
     if not items:
@@ -45,6 +45,7 @@ def CheckFileDir(FileName):
 def DownloadFile(filename):
     try:
         file_id = CheckFileDir(filename)
+        print(file_id)
         path = 'I:\\clients\\jgil1000\\'
         request = service.files().export_media(fileId=file_id,mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         fh = io.FileIO(path + filename + '.xlsx','wb')
@@ -57,4 +58,4 @@ def DownloadFile(filename):
     except Exception as e:
         print('Error downloading file from Google Drive: %s' % e)
 
-DownloadFile('GS2')
+DownloadFile('newFile')
