@@ -36,7 +36,7 @@ service = build('drive', 'v3', credentials=creds)
 
 def CheckFileDir(FileName):
     # page_token = None
-    results = service.files().list(spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
+    results = service.files().list(q='trashed=false',spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
     items = results.get('files', [])
 
     # print(len(items))
@@ -63,5 +63,5 @@ def delete_file(filename):
     except Exception as e:
         print('An error occurred: %s',e)
 
-filename = input("Enter filename(case sensitive) to delete file from drive: ")
-delete_file(filename)
+
+delete_file('filename')

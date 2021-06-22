@@ -38,7 +38,7 @@ service = build('drive', 'v3', credentials=creds)
 
 def CheckFileDir(FileName):
     # page_token = None
-    results = service.files().list(spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
+    results = service.files().list(q='trashed=false',spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
     items = results.get('files', [])
 
     # print(len(items))
@@ -69,33 +69,25 @@ def retrieve_permissions(file_id):
   except Exception as error:
     print('An error occurred: %s' % error)
   return None
-emails = []
-filename = input("Enter filename(case sensitive) to assign email in drive: ")
-no_of_emails = int(input("Enter no of emails you wanna add: "))
-for no in range(no_of_emails):
-    email = input("Enter email to share the file: ")
-    emails.append(email)
-file_id = CheckFileDir(filename)
+
+file_id = CheckFileDir('filename')
 perm_id = retrieve_permissions(file_id)
 print(perm_id)
-# Insert new permission first
-# emails = ['daninotific@gmail.com','ayizashiekh@gmail.com','whodanyalahmed@gmail.com']
 
-# Then delete old permission
 for id in perm_id:
     try:
         service.permissions().delete(fileId=file_id, permissionId=id['id']).execute()
     except Exception as e:
         print("Done deleting...")
-for email in emails:
-    try:
-        
-        new_permission = {
-            'type': 'user',
-            'role': 'writer',
-            'emailAddress': email
-            }
-        run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
-        print("success : New Email added")
-    except Exception as e:
-        print("error : cant add new permission")
+
+try:
+    
+    new_permission = {
+        'type': 'user',
+        'role': 'writer',
+        'emailAddress': 'email@gmail.com'
+        }
+    run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
+    print("success : New Email added")
+except Exception as e:
+    print("error : cant add new permission")

@@ -34,7 +34,7 @@ if not creds or not creds.valid:
 service = build('drive', 'v3', credentials=creds)
 def CheckFileDir(FileName):
     # page_token = None
-    results = service.files().list(spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
+    results = service.files().list(q='trashed=false',spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
     items = results.get('files', [])
 
     # print(len(items))
@@ -82,8 +82,10 @@ def UploadFile(path,local_filename,upload_name):
     
 
 path = 'I:\\clients\\jgil1000\\'
-filename = input("Enter local filename(case sensitive) with extension to upload in drive: ")
-# drive_filename = "agency"
-
-drive_filename = input("Enter filename(case sensitive) to show in drive: ")
+# this script will replace that file with local xlsx file in drive
+# as it is already present its asking about replace
+drive_filename = "newFile"
+filename = "agency.xlsx"
 UploadFile(path,filename,drive_filename)
+# the error was because in replace it delete previous version and add new version
+# hope you get it....Thats it
