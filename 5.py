@@ -70,7 +70,7 @@ def retrieve_permissions(file_id):
     print('An error occurred: %s' % error)
   return None
 
-file_id = CheckFileDir('filename')
+file_id = CheckFileDir('GS2')
 perm_id = retrieve_permissions(file_id)
 print(perm_id)
 
@@ -80,14 +80,17 @@ for id in perm_id:
     except Exception as e:
         print("Done deleting...")
 
+
+# add emails like this
+emails = ["daniahmedkhatri@gmail.com","something@gmail.com"]
 try:
-    
-    new_permission = {
-        'type': 'user',
-        'role': 'writer',
-        'emailAddress': 'email@gmail.com'
-        }
-    run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
-    print("success : New Email added")
+    for email in emails:
+        new_permission = {
+            'type': 'user',
+            'role': 'writer',
+            'emailAddress': email
+            }
+        run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
+        print("success : New Email added")
 except Exception as e:
     print("error : cant add new permission")
