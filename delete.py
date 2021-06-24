@@ -63,5 +63,5 @@ def delete_file(filename):
     except Exception as e:
         print('An error occurred: %s',e)
 
-
-delete_file('filename')
+if __name__ == '__main__':
+    delete_file('filename')

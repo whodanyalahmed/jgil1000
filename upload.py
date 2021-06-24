@@ -1,14 +1,11 @@
 from __future__ import print_function
-from http.client import error
 import os.path
-import time
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-import io
 
-from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
@@ -35,7 +32,6 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 
 service = build('drive', 'v3', credentials=creds)
-
 def CheckFileDir(FileName):
     # page_token = None
     results = service.files().list(q='trashed=false',spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
@@ -54,43 +50,39 @@ def CheckFileDir(FileName):
                 print(FileName + " is already there")
                 # print(item['name'])
                 return item['id']
-def retrieve_permissions(file_id):
-  """Retrieve a list of permissions.
+ 
+def delete_file(filename):
 
-  Args:
-    service: Drive API service instance.
-    file_id: ID of the file to retrieve permissions for.
-  Returns:
-    List of permissions.
-  """
-  try:
-    permissions = service.permissions().list(fileId=file_id).execute()
-    return permissions.get('permissions', [])
-  except Exception as error:
-    print('An error occurred: %s' % error)
-  return None
-
-file_id = CheckFileDir('GS2')
-perm_id = retrieve_permissions(file_id)
-print(perm_id)
-
-for id in perm_id:
+    file_id = CheckFileDir(filename)
+    print(file_id)
     try:
-        service.permissions().delete(fileId=file_id, permissionId=id['id']).execute()
+        service.files().delete(fileId=file_id).execute()
+        print("success : successfully deleted the file")
     except Exception as e:
-        print("Done deleting...")
+        print('An error occurred: %s',e)
+def UploadFile(path,local_filename,upload_name):
+    file = CheckFileDir(upload_name)
+    # print(file)
+    if(file != None):
+        ask = input("Wanna replace ? delete old one? Y/N: ")
+        if(ask.lower() == 'y' ):
+            delete_file(upload_name)
+            
+    file_metadata = {
+    'name': upload_name,
+    'mimeType': 'application/vnd.google-apps.spreadsheet'
+    }
+    media = MediaFileUpload(path+local_filename,
+                        mimetype='application/vnd. openxmlformats-officedocument',
+                        resumable=True)
+    file = service.files().create(body=file_metadata,
+                                    media_body=media,
+                                    fields='id').execute()
+    print('File ID: %s' % file.get('id'))
+    
 
-
-# add emails like this
-emails = ["daniahmedkhatri@gmail.com","something@gmail.com"]
-try:
-    for email in emails:
-        new_permission = {
-            'type': 'user',
-            'role': 'writer',
-            'emailAddress': email
-            }
-        run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
-        print("success : New Email added")
-except Exception as e:
-    print("error : cant add new permission")
+if __name__ == '__main__':
+    path = 'I:\\clients\\jgil1000\\'
+    drive_filename = "newFile"
+    filename = "agency.xlsx"
+    UploadFile(path,filename,drive_filename)

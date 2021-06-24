@@ -1,11 +1,14 @@
 from __future__ import print_function
+from http.client import error
 import os.path
+import time
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+import io
 
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from googleapiclient.http import MediaIoBaseDownload
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
@@ -32,6 +35,7 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 
 service = build('drive', 'v3', credentials=creds)
+
 def CheckFileDir(FileName):
     # page_token = None
     results = service.files().list(q='trashed=false',spaces='drive',fields="nextPageToken, files(id, name)",pageSize=400).execute()
@@ -50,42 +54,48 @@ def CheckFileDir(FileName):
                 print(FileName + " is already there")
                 # print(item['name'])
                 return item['id']
- 
-def delete_file(filename):
+def retrieve_permissions(file_id):
+  """Retrieve a list of permissions.
 
+  Args:
+    service: Drive API service instance.
+    file_id: ID of the file to retrieve permissions for.
+  Returns:
+    List of permissions.
+  """
+  try:
+    permissions = service.permissions().list(fileId=file_id).execute()
+    return permissions.get('permissions', [])
+  except Exception as error:
+    print('An error occurred: %s' % error)
+  return None
+def ShareFile(filename,emails):
     file_id = CheckFileDir(filename)
-    print(file_id)
-    try:
-        service.files().delete(fileId=file_id).execute()
-        print("success : successfully deleted the file")
-    except Exception as e:
-        print('An error occurred: %s',e)
-def UploadFile(path,local_filename,upload_name):
-    file = CheckFileDir(upload_name)
-    # print(file)
-    if(file != None):
-        ask = input("Wanna replace ? delete old one? Y/N: ")
-        if(ask.lower() == 'y' ):
-            delete_file(upload_name)
-            
-    file_metadata = {
-    'name': upload_name,
-    'mimeType': 'application/vnd.google-apps.spreadsheet'
-    }
-    media = MediaFileUpload(path+local_filename,
-                        mimetype='application/vnd. openxmlformats-officedocument',
-                        resumable=True)
-    file = service.files().create(body=file_metadata,
-                                    media_body=media,
-                                    fields='id').execute()
-    print('File ID: %s' % file.get('id'))
-    
+    perm_id = retrieve_permissions(file_id)
+    print(perm_id)
 
-path = 'I:\\clients\\jgil1000\\'
-# this script will replace that file with local xlsx file in drive
-# as it is already present its asking about replace
-drive_filename = "newFile"
-filename = "agency.xlsx"
-UploadFile(path,filename,drive_filename)
-# the error was because in replace it delete previous version and add new version
-# hope you get it....Thats it
+    for id in perm_id:
+        try:
+            service.permissions().delete(fileId=file_id, permissionId=id['id']).execute()
+        except Exception as e:
+            print("Done deleting...")
+
+
+    # add emails like this
+    try:
+        for email in emails:
+            new_permission = {
+                'type': 'user',
+                'role': 'writer',
+                'emailAddress': email
+                }
+            run_new_permission = service.permissions().create(fileId=file_id,sendNotificationEmail=False,body=new_permission).execute()
+            print("success : New Email added")
+    except Exception as e:
+        print("error : cant add new permission")
+
+
+
+if __name__ == '__main__':
+    emails = ["daniahmedkhatri@gmail.com","something@gmail.com"]
+    ShareFile('GS2',emails)

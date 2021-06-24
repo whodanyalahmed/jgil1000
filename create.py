@@ -34,11 +34,15 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 
 service = build('drive', 'v3', credentials=creds)
-data = {
-    # this script will create a file name 'newFile'
-    'name': 'newFile',
-    'mimeType': 'application/vnd.google-apps.spreadsheet',
-}
-file = service.files().create(body=data).execute() 
-print("success: file created")
-print('File ID: %s' % file.get('id'))
+def CreateFile(filename):
+    data = {
+        # this script will create a file name 'newFile'
+        'name': filename,
+        'mimeType': 'application/vnd.google-apps.spreadsheet',
+    }
+    file = service.files().create(body=data).execute() 
+    print("success: file created")
+    print('File ID: %s' % file.get('id'))
+    
+if __name__ == '__main__':
+    CreateFile("newFile")
