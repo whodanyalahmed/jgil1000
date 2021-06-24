@@ -61,5 +61,3 @@ def DownloadFile(filename):
 
 if __name__ == '__main__':
     DownloadFile('sheet')
-    # write code to be executed only on direct execution, but not on import
-    # This is because direct execution assigns `'__main__'` to `__name__` while import of any way assigns the name under which it is imported.
