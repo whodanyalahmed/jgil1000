@@ -47,12 +47,13 @@ def UpdateValues(Id,values):
 def Updater(filename,to_file):
     file_id  = CheckFileDir(filename)
     to = CheckFileDir(to_file)
-    values = GetExcelValues('A2:A',to)
+    values = GetExcelValues('A1',to)
     url = f"https://docs.google.com/spreadsheets/d/{file_id}/edit?usp=drive_web"
+    print(values)
     if values == 0:
         values = [[url]]
     else:
-        values[0].append(url)
+        values[0][0] = url
     print(values)
     UpdateValues(to,values)
 

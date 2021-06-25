@@ -42,13 +42,12 @@ def CheckFileDir(FileName):
                 # print(FileName + " is already there")
                 return item['id']
  
-def DownloadFile(filename):
+def DownloadFile(filename_in_drive,outputname,path):
     try:
-        file_id = CheckFileDir(filename)
+        file_id = CheckFileDir(filename_in_drive)
         print(file_id)
-        path = 'I:\\clients\\jgil1000\\'
         request = service.files().export_media(fileId=file_id,mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        fh = io.FileIO(path + filename + '.xlsx','wb')
+        fh = io.FileIO(path + outputname + '.xlsx','wb')
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:
@@ -60,4 +59,6 @@ def DownloadFile(filename):
 
 
 if __name__ == '__main__':
-    DownloadFile('sheet')
+    
+    path = 'I:\\clients\\jgil1000\\'
+    DownloadFile('sheet','sheet',path)
