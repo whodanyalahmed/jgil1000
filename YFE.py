@@ -1,5 +1,5 @@
-from download import DownloadFile
-from url_updater import GetExcelValues,CheckFileDir
+from download_min import DownloadFile,CheckFileDir
+from url_updater import GetExcelValues
 
 
 folder = "C:/Ticker/"
