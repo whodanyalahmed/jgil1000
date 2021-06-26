@@ -1,13 +1,18 @@
-from download_min import DownloadFile,CheckFileDir
+from download import DownloadFile,CheckFileDir
 from url_updater import GetExcelValues
+def YFEDownloader(folder,filename):
+
+    file_id = CheckFileDir(filename)
+    sheetname = "TickerList"
+    values = GetExcelValues(sheetname+"!E1",file_id)
+    value = values[0][0]
+    value= str(value)
+    DownloadFile(filename,"YFE-"+value,folder)
+
+    return ("YFE-"+value)
 
 
-folder = "C:/Ticker/"
-filename = "GS2"
-file_id = CheckFileDir(filename)
-sheet_Name = "TickerList"
-values = GetExcelValues("E1",file_id)
-print(values)
-value = values[0][0]
-value= str(value)
-DownloadFile(filename,"YFE-"+value,folder)
+if __name__ == '__main__':
+    folder = "C:/Ticker/"
+    filename = "GS2"
+    YFEDownloader(folder,filename)

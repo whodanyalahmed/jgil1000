@@ -53,7 +53,7 @@ def CheckFileDir(FileName):
                 # print(item['name'])
                 return item['id']
  
-def delete_file(filename):
+def deleteFile(filename):
 
     file_id = CheckFileDir(filename)
     print(file_id)
@@ -64,4 +64,4 @@ def delete_file(filename):
         print('An error occurred: %s',e)
 
 if __name__ == '__main__':
-    delete_file('filename')
+    deleteFile('filename')

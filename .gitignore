@@ -3,5 +3,5 @@ token.json
 credentials.json
 agency.xlsx
 __pycache__
-scripts.zip
 token.pickle
+*.zip

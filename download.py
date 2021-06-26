@@ -22,5 +22,5 @@ def DownloadFile(filename_in_drive,outputname,path):
 
 if __name__ == '__main__':
     
-    path = 'I:\\clients\\jgil1000\\'
-    DownloadFile('GS2','GS@',path)
+    path = 'C:/Ticker/'
+    DownloadFile('GS2','GS2',path)
