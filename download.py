@@ -23,4 +23,4 @@ def DownloadFile(filename_in_drive,outputname,path):
 if __name__ == '__main__':
     
     path = 'C:/Ticker/'
-    DownloadFile('GS2','GS2',path)
+    DownloadFile('FataFat Stock Screener_LITE','GS2',path)

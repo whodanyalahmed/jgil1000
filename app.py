@@ -9,9 +9,9 @@ if __name__ == '__main__':
     
     folder = "C:/Ticker/"
     filename = "GS2"
-    YFEname = YFEDownloader(folder,filename)
+    YFEDownloader(folder,filename)
     deleteFile(filename)
-    UploadFile(folder,YFEname+".xlsx",filename)
+    UploadFile(folder,"YFE-upload.xlsx",filename)
     Updater(filename,"GS1")
     emails = ["daniahmedkhatri@gmail.com","something@gmail.com","anotheremail@gmail.com"]
     ShareFile(filename,emails)
